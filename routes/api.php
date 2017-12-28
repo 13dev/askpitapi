@@ -1,7 +1,12 @@
 <?php
+// ex: api/v1/auth
+
 /**
- * Created by PhpStorm.
- * User: root
- * Date: 28-12-2017
- * Time: 18:32
+ * Auth
  */
+$router->group([
+    'prefix' => 'auth',
+], function() use ($router){
+    $router->post('/login', 'AuthController@postLogin');
+    $router->patch('/refresh','AuthController@patchRefresh');
+});
