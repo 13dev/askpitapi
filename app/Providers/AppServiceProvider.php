@@ -13,6 +13,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-       // $this->app->register(\Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+        if ($this->app->environment('local')) {
+
+            //Show all php errors
+            ini_set('display_errors', 1);
+            ini_set('display_startup_errors', 1);
+            error_reporting(E_ALL);
+
+            //Registering local packages
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+            $this->app->register(\Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+        }
+
     }
 }

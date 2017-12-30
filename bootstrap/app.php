@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -10,7 +7,6 @@ try {
 } catch (Dotenv\Exception\InvalidPathException $e) {
     die($e->getMessage());
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +26,6 @@ $app = new App\Application(
 $app->withFacades();
 
 $app->withEloquent();
-
 
 /*
 |--------------------------------------------------------------------------
@@ -53,8 +48,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -72,6 +65,7 @@ $app->middleware([
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'admin' => App\Http\Middleware\AdminMiddleware::class,
 ]);
 
 /*
@@ -85,14 +79,11 @@ $app->routeMiddleware([
 |
 */
 
-//$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\LogServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
-
-$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
-
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 
 

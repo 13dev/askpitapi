@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -37,12 +38,16 @@ class AuthController extends Controller
             return $e->getResponse();
         }
         try {
+            //$user = User::where('email', $request->get('email'))->first();
             // Attempt to verify the credentials and create a token for the user
+
             if (!$token = JWTAuth::attempt(
                 $this->getCredentials($request)
             )) {
                 return $this->onUnauthorized();
             }
+
+            //JWTAuth::addClaims([ 'admin' => $user->admin ]);
         } catch (JWTException $e) {
             // Something went wrong whilst attempting to encode the token
             return $this->onJwtGenerationError();
@@ -87,11 +92,14 @@ class AuthController extends Controller
     protected function onAuthorized($token)
     {
         Log::notice('onAuthorized called...');
+
+        $payload = JWTAuth::setToken($token)->getPayload();
+
         return new JsonResponse([
             'message' => 'token_generated',
             'data' => [
                 'token' => $token,
-                'expires_in' => JWTAuth::factory()->getTTL() * 60
+                'expires_in' => $payload->get('exp'),
             ]
         ]);
     }
@@ -119,6 +127,7 @@ class AuthController extends Controller
             // try to get current token and refresh-it.
             $token = JWTAuth::parseToken();
             $newToken = $token->refresh();
+            $payload = JWTAuth::setToken($newToken)->getPayload();
 
         }catch (JWTException $e){
             // Something went wrong whilst attempting to encode the token
@@ -132,7 +141,7 @@ class AuthController extends Controller
             'message' => 'token_refreshed',
             'data' => [
                 'token' => $newToken,
-                'expires_in' => JWTAuth::factory()->getTTL() * 60
+                'expires_in' => $payload->get('exp'),
             ]
         ]);
     }

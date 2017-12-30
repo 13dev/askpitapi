@@ -10,3 +10,18 @@ $router->group([
     $router->post('/login', 'AuthController@postLogin');
     $router->patch('/refresh','AuthController@patchRefresh');
 });
+
+/**
+ * Admin
+ */
+$router->group([
+    'prefix' => 'admin',
+    'middleware' => ['auth:api','admin'],
+], function() use ($router){
+    $router->get('/test', function(){
+        return "11";
+    });
+});
+
+
+

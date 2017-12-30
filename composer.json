@@ -15,7 +15,8 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~6.0",
-        "mockery/mockery": "~0.9"
+        "mockery/mockery": "~0.9",
+        "barryvdh/laravel-ide-helper": "^2.4"
     },
     "autoload": {
         "psr-4": {
@@ -29,6 +30,12 @@
         ]
     },
     "scripts": {
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta",
+            "php artisan optimize"
+        ],
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
         ]
