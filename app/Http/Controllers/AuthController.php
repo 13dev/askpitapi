@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Helpers\Response;
 
 class AuthController extends Controller
 {
@@ -64,9 +63,8 @@ class AuthController extends Controller
     protected function onUnauthorized()
     {
         Log::notice('onUnauthorized Called...');
-        return new JsonResponse([
-            'message' => 'invalid_credentials'
-        ], Response::HTTP_UNAUTHORIZED);
+
+        return Response::json('invalid_credentials', [], Response::UNAUTHORIZED);
     }
 
     /**
@@ -78,9 +76,7 @@ class AuthController extends Controller
     {
         Log::notice('onJwtGenerationError called...');
 
-        return new JsonResponse([
-            'message' => 'could_not_create_token'
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return Response::json('could_not_create_token', [], Response::INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -95,13 +91,11 @@ class AuthController extends Controller
 
         $payload = JWTAuth::setToken($token)->getPayload();
 
-        return new JsonResponse([
-            'message' => 'token_generated',
-            'data' => [
-                'token' => $token,
-                'expires_in' => $payload->get('exp'),
-            ]
+        return Response::json('token_generated', [
+            'token' => $token,
+            'expires_in' => $payload->get('exp'),
         ]);
+
     }
 
     /**
@@ -137,12 +131,10 @@ class AuthController extends Controller
 
         Log::notice('Token refreshed!');
 
-        return new JsonResponse([
-            'message' => 'token_refreshed',
-            'data' => [
-                'token' => $newToken,
-                'expires_in' => $payload->get('exp'),
-            ]
+        return Response::json('token_refreshed', [
+            'token' => $newToken,
+            'expires_in' => $payload->get('exp'),
         ]);
+
     }
 }

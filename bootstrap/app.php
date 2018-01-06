@@ -1,6 +1,12 @@
 <?php
+//Show all php errors
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once __DIR__.'/../vendor/autoload.php';
+
+
 
 try {
     (new Dotenv\Dotenv(__DIR__.'/../'))->load();
@@ -85,10 +91,31 @@ $app->register(App\Providers\LogServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Barryvdh\Cors\ServiceProvider::class);
+// $app->register(Barryvdh\Cors\LumenServiceProvider::class);
 
 
-$app->configure('auth');
-$app->configure('cors');
+/*
+|--------------------------------------------------------------------------
+| Include all configs (by SK)
+|--------------------------------------------------------------------------
+|
+| Here we include all php files that exists in config directory
+|
+*/
+$files = scandir(__DIR__."/../config/");
+if($files) {
+    foreach($files as $file) {
+        if(preg_match("@(\.php)$@",$file)) {
+            // include app configs
+            $filename = explode('.php', $file);
+            $app->configure($filename[0]);
+        }
+    }
+}
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

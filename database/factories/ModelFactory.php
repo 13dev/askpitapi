@@ -16,5 +16,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'username' => $faker->userName,
         'email' => $faker->email,
         'password' => app('hash')->make('secret'),
+        'firstname' => $faker->firstName,
+        'lastname' => $faker->lastName,
+        'birthday' => $faker->dateTimeThisCentury->format('Y-m-d'),
+        'cover' => $faker->imageUrl(),
+        'avatar' => $faker->imageUrl(),
+        'gender' => $faker->boolean,
+        'admin' => $faker->boolean,
     ];
 });

@@ -4,13 +4,11 @@ namespace App;
 
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-
-class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class User extends Elegant implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable;
 
@@ -20,7 +18,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'username',
+        'email',
+        'firstname',
+        'lastname',
+        'birthday',
+        'cover',
+        'avatar',
+        'gender',
+        'password',
     ];
 
     /**
@@ -29,8 +35,29 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password','admin'
+        'password',
+        'admin',
     ];
+
+    //Y-m-d
+    protected $dates = [
+        'birthday',
+    ];
+
+    protected $rules = [
+        'email' => 'required|email|max:100|unique:users',
+        'password' => 'required|max:100|min:5',
+        'firstname' => 'required|max:50|min:2',
+        'lastname' => 'required||max:50|min:2',
+        'birthday' => 'required|date',
+        'gender' => 'required|integer',
+        'username' => 'required|min:3|max:18|unique:users', 
+    ];
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = app('hash')->make($value);
+    }
 
 
     /**
@@ -51,7 +78,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function getJWTCustomClaims()
     {
         return [
-            'admin' => $this->admin
+            'admin' => $this->admin,
         ];
     }
 }
