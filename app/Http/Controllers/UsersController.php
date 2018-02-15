@@ -10,15 +10,15 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UsersController extends Controller
 {
-	public function __construct()
+    public function __construct()
     {
         //apply auth middleware except getting user
         $this->middleware('auth:api', [
-        	'except' => [
-        		'getUsers',
-        		'getUser',
-        		'createUser',
-        	]
+            'except' => [
+                'getUsers',
+                'getUser',
+                'createUser',
+            ]
         ]);
     }
 
@@ -27,35 +27,35 @@ class UsersController extends Controller
         // get first 20 users
         if($users = User::paginate(20))
         {
-        	 return Response::json('getusers_success', $users);
+            return Response::json('getusers_success', $users);
         }
 
         // no users to retrive
-		return Response::json('getusers_no_content', [
-		], Response::NO_CONTENT);
+        return Response::json('getusers_no_content', [
+        ], Response::NO_CONTENT);
     }
 
     public function getUser($id)
     {
         // find user by id
-    	if($user = User::find($id))
+        if($user = User::find($id))
         {
             // user was found
-        	return Response::json('getuser_success', [
-    			$user,
-        	]);
+            return Response::json('getuser_success', [
+                $user,
+            ]);
         }
 
         // not found user
-		return Response::json('getuser_notfound', [
-		], Response::NOT_FOUND);
+        return Response::json('getuser_notfound', [
+        ], Response::NOT_FOUND);
 
     }
 
     public function createUser(Request $request)
     {
-    	// Add some delay
-    	sleep(random_int(1, 4));
+        // Add some delay
+        sleep(random_int(1, 4));
 
         // get user data
         $userData = $this->getCredentials($request);
@@ -74,17 +74,17 @@ class UsersController extends Controller
 
         // attempt create user
         //TODO: Change User static to dynamic..
-    	if($createdUser = User::create($userData))
+        if($createdUser = User::create($userData))
         {
             // user created
-        	return Response::json('createuser_success', [
-    			$createdUser,
-        	],Response::OK);
+            return Response::json('createuser_success', [
+                $createdUser,
+            ],Response::OK);
         }
 
         // cant create user...
-		return Response::json('createuser_error', [
-		], Response::NOT_IMPLEMENTED);
+        return Response::json('createuser_error', [
+        ], Response::NOT_IMPLEMENTED);
 
     }
 
@@ -96,8 +96,10 @@ class UsersController extends Controller
 
         $isUserAdmin = $payload->get('admin');
 
+        // is user admin?
         if(!$isUserAdmin)
         {
+            //not deleting himself?
             if($id != $authUser->id)
             {
                 // cant delete this user...
@@ -111,7 +113,7 @@ class UsersController extends Controller
         {
             // cant delete this user...
             return Response::json('deleteuser_error', [
-                ], Response::UNAUTHORIZED);
+            ], Response::UNAUTHORIZED);
         }
 
         // find user by id
@@ -137,7 +139,6 @@ class UsersController extends Controller
         return Response::json('deleteuser_error', [
         ], Response::OK);
 
-
     }
 
     public function getAuthenticatedUser()
@@ -161,13 +162,13 @@ class UsersController extends Controller
     {
         // return only data of the user
         return $request->only([
-        	'email',
-        	'password',
-        	'firstname',
-        	'lastname',
-        	'birthday',
-        	'gender',
-        	'username',
+            'email',
+            'password',
+            'firstname',
+            'lastname',
+            'birthday',
+            'gender',
+            'username',
         ]);
     }
 }
