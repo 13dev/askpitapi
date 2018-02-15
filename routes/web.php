@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return "Welcome  to ". env('APP_NAME') . " - ". $router->app->version();
 });
 
 

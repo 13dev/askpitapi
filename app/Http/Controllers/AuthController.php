@@ -30,7 +30,7 @@ class AuthController extends Controller
         try {
             $this->validate($request, [
                 'email' => 'required|email|max:100',
-                'password' => 'required',
+                'password' => 'required|max:50',
             ]);
         } catch (ValidationException $e) {
             Log::error('Validation error! ', [$e->getMessage()]);
