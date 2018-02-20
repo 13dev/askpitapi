@@ -48,9 +48,9 @@ class User extends Elegant implements AuthenticatableContract, AuthorizableContr
         'email' => 'required|email|max:100|unique:users',
         'password' => 'required|max:100|min:5',
         'firstname' => 'required|max:50|min:2',
-        'lastname' => 'required||max:50|min:2',
-        'birthday' => 'required|date',
-        'gender' => 'required|integer',
+        'lastname'  => 'required||max:50|min:2',
+        'birthday'  => 'required|date',
+        'gender'    => 'required|integer',
         'username' => 'required|min:3|max:18|unique:users', 
     ];
 

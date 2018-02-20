@@ -15,7 +15,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'username' => $faker->userName,
         'email' => $faker->email,
-        'password' => app('hash')->make('secret'),
+        'password' => 'secret',
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
         'birthday' => $faker->dateTimeThisCentury->format('Y-m-d'),

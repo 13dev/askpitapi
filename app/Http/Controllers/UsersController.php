@@ -73,7 +73,6 @@ class UsersController extends Controller
         }
 
         // attempt create user
-        //TODO: Change User static to dynamic..
         if($createdUser = User::create($userData))
         {
             // user created
